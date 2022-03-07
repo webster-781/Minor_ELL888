@@ -75,6 +75,7 @@ def getAdultData(amount = 1000):
     I = I[ind]
     C = C[ind]
     y = y[ind]
+    # print(y.shape)
 
     # print(np.unique(C[:,0]))
     C1 = np.zeros((C.shape[0],1))
@@ -88,7 +89,7 @@ def getAdultData(amount = 1000):
         onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
         C1 = np.concatenate((C1,onehot_encoded),axis = 1)
 
-    print(y.shape)
+    # print(y.shape)
     label_encoder = LabelEncoder()
     integer_encoded = label_encoder.fit_transform(y)
     # print(integer_encoded)
@@ -96,7 +97,7 @@ def getAdultData(amount = 1000):
     onehot_encoder = OneHotEncoder(sparse=False)
     integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
     onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
-    y = onehot_encoded.flatten()
+    y1 = onehot_encoded.flatten()
 
     return R,I,C1,y
 

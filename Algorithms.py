@@ -149,6 +149,22 @@ def getMissData(X : np.array , freq = 0.05):
 
     return X
 
+def getMissLabels(y : np.array , freq = 0.05):
+    y = np.array(y,dtype = float)
+    n = y.shape[0]
+    m = (int)(freq * n)
+    rng = np.random.default_rng()
+    indAbs = np.array(rng.choice(n, size=m, replace=False))
+    np.sort(indAbs,axis = None)
+    y1 = np.ones(n)
+    y1[indAbs] = 0
+    indPre = []
+    for i in range(n):
+        if(y1[i] == 1):
+            indPre.append(i)
+    indPre = np.array(indPre)
+    return indPre,indAbs
+
 def imputeMean(X : np.array): # Imputation using mean of other rowss
     imp = SimpleImputer(missing_values=np.nan, strategy='mean')
     imp.fit(X)
@@ -260,7 +276,6 @@ def visualise(X_transformed : np.array, y: np.array, A:csr_matrix):
                 cnt2 += 1
     print(cnt1/(cnt1 + cnt2)*100,"%")
     plt.title("2D Visualization of the Graph")
-    plt.legend(["Correct Edges","Incorrect Edges"])
     plt.show()
 
 def Transform(X: np.array, kernel = 'linear', n = 2):
@@ -281,3 +296,30 @@ def scatterPlot(X_transformed : np.array, y : np.array):
         plt.scatter(X_transformed[ind[i],0],X_transformed[ind[i],1],color = cols[i])
     plt.title("Visulaisation/Scatter Plot of all data points after PCA")
     plt.legend(str_classes)
+
+def plot_Q2(A,indAb,XPr,yPr,X,y,k):
+    A0 = A.copy()
+    indAbs = indAb.copy()
+    XPre = XPr.copy()
+    yPre = yPr.copy()
+    cnt1 = cnt2 = 0
+    for i in indAbs:
+        x0,y0 = X[i],y[i]
+        d = np.linalg.norm(XPre-x0,axis = 1)
+        neighbours = np.argpartition(d,k)[:k]
+        cnt = 0.0
+        for j in neighbours:
+            cnt += y[j]/k
+            A0[i,j] = 1
+            A0[j,i] = 1
+        XPre = np.concatenate((XPre,x0.reshape(1,x0.shape[0])),axis = 0)
+        ypred = np.round(cnt)
+        if(ypred == y[i]):
+            cnt1 += 1
+        else:
+            cnt2 += 1
+        yPre = np.concatenate((yPre,[y[i]]),axis = 0)
+        print(yPre.shape)
+    visualise(A0,yPre)
+
+    return [HomeophilicEff(A0,yPre),betterEfficiency(A0,yPre),cnt1/(cnt1+cnt2)]
