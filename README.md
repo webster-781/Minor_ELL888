@@ -1,4 +1,5 @@
-# Minor_ELL888
+# Minor_ELL88
+
 ELL888 Minor
 
 Question 1: *Q1.ipynb*
@@ -17,6 +18,7 @@ Data sets Directory: *(./datasets)*
 
 Plots Images Directory : *(./plots)*
 
+Changed on 2nd June 2022.
 ---
 
 Ayush Singh
