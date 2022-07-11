@@ -26,3 +26,5 @@ Ayush Singh
 2019MT60748
 
 Department of Mathematics
+
+IIT DElhi
